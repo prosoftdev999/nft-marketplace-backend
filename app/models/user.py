@@ -1,5 +1,7 @@
+from __future__ import annotations
+
 from sqlalchemy import Boolean, String
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.session import Base
 from app.models.mixins import TimestampMixin
@@ -45,4 +47,9 @@ class User(TimestampMixin, Base):
         Boolean,
         default=False,
         nullable=False,
+    )
+
+    favorites: Mapped[list["Favorite"]] = relationship(
+        back_populates="user",
+        cascade="all, delete-orphan",
     )

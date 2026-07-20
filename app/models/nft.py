@@ -1,7 +1,9 @@
+from __future__ import annotations
+
 from typing import Any
 
 from sqlalchemy import ForeignKey, JSON, String, Text, UniqueConstraint
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.session import Base
 from app.models.mixins import TimestampMixin
@@ -73,6 +75,14 @@ class NFT(TimestampMixin, Base):
     )
 
     collection_id: Mapped[int] = mapped_column(
-        ForeignKey("collections.id", ondelete="CASCADE"),
+        ForeignKey(
+            "collections.id",
+            ondelete="CASCADE",
+        ),
         nullable=False,
+    )
+
+    favorites: Mapped[list["Favorite"]] = relationship(
+        back_populates="nft",
+        cascade="all, delete-orphan",
     )
